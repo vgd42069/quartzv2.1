@@ -1,6 +1,87 @@
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, RefreshCw, Sparkles, Clock, AlertCircle, MessageCircle, Heart, Send, CornerDownRight } from 'lucide-react';
 
+// Coffee Cup Loader Component
+const CoffeeCupLoader = () => {
+  return (
+    <div className="flex flex-col items-center justify-center py-12">
+      <div className="relative w-24 h-24 mb-4">
+        <svg viewBox="0 0 100 100" className="w-full h-full">
+          <defs>
+            <clipPath id="cup-clip">
+              <path d="M 20 30 L 15 80 Q 15 90 25 90 L 55 90 Q 65 90 65 80 L 60 30 Z" />
+            </clipPath>
+            <linearGradient id="coffee-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style={{stopColor: '#9333ea'}} />
+              <stop offset="50%" style={{stopColor: '#c026d3'}} />
+              <stop offset="100%" style={{stopColor: '#e879f9'}} />
+            </linearGradient>
+          </defs>
+          
+          <path
+            d="M 20 30 L 15 80 Q 15 90 25 90 L 55 90 Q 65 90 65 80 L 60 30 Z"
+            fill="#ffffff"
+            stroke="#9333ea"
+            strokeWidth="2"
+          />
+          
+          <path
+            d="M 65 45 Q 75 45 75 55 Q 75 65 65 65"
+            fill="none"
+            stroke="#9333ea"
+            strokeWidth="2"
+          />
+          
+          <rect
+            x="10"
+            y="30"
+            width="60"
+            height="60"
+            fill="url(#coffee-gradient)"
+            clipPath="url(#cup-clip)"
+            style={{
+              animation: 'fillCoffee 2s ease-in-out infinite'
+            }}
+          />
+          
+          <g>
+            <path
+              d="M 30 20 Q 32 15 30 10"
+              fill="none"
+              stroke="#9333ea"
+              strokeWidth="2"
+              strokeLinecap="round"
+              opacity="0.6"
+              style={{animation: 'steam 1.5s ease-in-out infinite'}}
+            />
+            <path
+              d="M 40 22 Q 42 17 40 12"
+              fill="none"
+              stroke="#9333ea"
+              strokeWidth="2"
+              strokeLinecap="round"
+              opacity="0.6"
+              style={{animation: 'steam 1.5s ease-in-out infinite 0.3s'}}
+            />
+            <path
+              d="M 50 20 Q 52 15 50 10"
+              fill="none"
+              stroke="#9333ea"
+              strokeWidth="2"
+              strokeLinecap="round"
+              opacity="0.6"
+              style={{animation: 'steam 1.5s ease-in-out infinite 0.6s'}}
+            />
+          </g>
+        </svg>
+      </div>
+      
+      <p className="text-purple-600 font-semibold text-lg">Brewing fresh market data...</p>
+      <p className="text-sm text-slate-500 mt-1">Connecting to Polymarket API</p>
+    </div>
+  );
+};
+
 const App = () => {
   const [markets, setMarkets] = useState([]);
   const [selectedMarket, setSelectedMarket] = useState(null);
@@ -747,15 +828,67 @@ const App = () => {
           <div className="text-slate-500 text-sm">728 x 90 Banner Ad Placement</div>
           <div className="text-xs text-slate-400 mt-1">Premium sponsorship opportunity</div>
         </div>
-        {error && (
+        
+        {/* Show error only if using demo data */}
+        {error && error.includes('demo') && (
           <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-6 flex items-start gap-2">
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <div>
-              <div className="font-medium">Connection Issue</div>
+              <div className="font-medium">Using Demo Data</div>
               <div className="text-sm mt-1">{error}</div>
             </div>
           </div>
         )}
+
+        {/* Coffee Cup Loader */}
+        {loading && markets.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="relative">
+              {/* Coffee Cup */}
+              <div className="relative w-24 h-28">
+                {/* Cup body */}
+                <div className="absolute bottom-0 w-20 h-24 bg-white border-4 border-purple-600 rounded-b-2xl overflow-hidden">
+                  {/* Coffee fill animation */}
+                  <div className="absolute bottom-0 left-0 right-0 h-0 bg-gradient-to-t from-amber-900 to-amber-700 rounded-b-xl" 
+                       style={{
+                         animation: 'fillCup 2s ease-in-out infinite'
+                       }}>
+                  </div>
+                </div>
+                {/* Cup handle */}
+                <div className="absolute right-0 top-8 w-8 h-12 border-4 border-purple-600 border-l-0 rounded-r-full"></div>
+                {/* Steam puffs */}
+                <div className="absolute -top-2 left-6 w-1 h-6 bg-gradient-to-t from-purple-300 to-transparent rounded-full opacity-60"
+                     style={{ animation: 'steam 1.5s ease-in-out infinite' }}>
+                </div>
+                <div className="absolute -top-2 left-10 w-1 h-6 bg-gradient-to-t from-purple-300 to-transparent rounded-full opacity-60"
+                     style={{ animation: 'steam 1.5s ease-in-out infinite', animationDelay: '0.3s' }}>
+                </div>
+                <div className="absolute -top-2 left-14 w-1 h-6 bg-gradient-to-t from-purple-300 to-transparent rounded-full opacity-60"
+                     style={{ animation: 'steam 1.5s ease-in-out infinite', animationDelay: '0.6s' }}>
+                </div>
+              </div>
+            </div>
+            <p className="mt-8 text-lg font-semibold text-purple-600 animate-pulse">
+              Brewing fresh market data...
+            </p>
+            <p className="mt-2 text-sm text-slate-500">☕ Connecting to Polymarket API</p>
+          </div>
+        )}
+
+        <style jsx>{`
+          @keyframes fillCup {
+            0% { height: 0%; }
+            50% { height: 100%; }
+            100% { height: 0%; }
+          }
+          @keyframes steam {
+            0% { opacity: 0; transform: translateY(0) scale(1); }
+            50% { opacity: 0.6; transform: translateY(-10px) scale(1.1); }
+            100% { opacity: 0; transform: translateY(-20px) scale(0.8); }
+          }
+        `}</style>
+
 
         {/* Hero Section - Top Trending/Social Market */}
         {(activeFilter === 'trending' || activeFilter === 'social') && filteredMarkets.length > 0 && (
@@ -934,10 +1067,7 @@ const App = () => {
             </div>
             
             {loading && markets.length === 0 ? (
-              <div className="text-center py-12">
-                <RefreshCw className="w-8 h-8 animate-spin mx-auto text-blue-600 mb-2" />
-                <p className="text-slate-600">Loading live markets...</p>
-              </div>
+              <CoffeeCupLoader />
             ) : filteredMarkets.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-lg border border-slate-200">
                 <AlertCircle className="w-8 h-8 mx-auto text-slate-400 mb-2" />
